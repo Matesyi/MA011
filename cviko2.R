@@ -91,3 +91,21 @@ tab.soucet <- table(s1$soucet)
 psti.soucet <- tab.soucet / nrow(s1)
 psti.soucet
 barplot(psti.soucet)
+
+#geometricka prob
+
+n <- 100
+
+par (mfrow = c (1,1), mar = c (4,4,4,1))
+
+plot (c (18,19), c (18,19), type = "n", xlab = "Eva", ylab = "Honza")
+
+E <- runif(n, 18,19)
+H <- runif(n, 18, 19)
+
+V$ok <- (V$E - 1/6 <= V$H) & (V$H <= V$E + 1/3)
+V$color <- ifelse ( V$ok, "#00cc00", "#ff0000")
+V$symbol <- ifelse (V$ok, 4, 4)
+
+#... dodelam vykresleni
+
