@@ -123,4 +123,26 @@ nA <- sum (V$ok)
 fA <- nA / n
 title (main = paste (nA, "/", n, "=", fA))
 
+##########################################################
+
+n <- 100
+
+d <- 10
+
+par (mfrow = c(1,1), mar = c(4,4,4,1))
+plot(c(0,d), c(0,d), type = "n", xlab = "bob x", ylab = "bod y")
+
+x <- runif (n, 0, d)
+y <- runif (n, 0, d)
+
+v <- data.frame (cbind(x,y))
+v$ok <- (( v$X <= v$Y) & (v$Y > d/2) & (v$X <d/2) & (v$Y < v$X + d/2) | (v$X > v$Y)) #doplnit a opravit
+v$color <- ifelse(v$ok, "#00cc00", "#ff0000")
+v$symbol <- ifelse (v$ok, 1,4)
+
+points (v$X, v$Y, col = c$color, pch = v$symbol, lwd = 2)
+nA <- sum (v$ok)
+fA <- nA / n
+title (main = paste(nA, "/", n, "=", fA))
+
 
