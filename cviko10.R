@@ -165,7 +165,9 @@ D <- prumer_Y - prumer_X - kvantil * s12 * sqrt ((n_X + n_Y) / (n_X * n_Y))
 H <- prumer_X - prumer_Y - kvantil * s12 * sqrt ((n_X + n_Y) / (n_X * n_Y))
 c (D,H)
 
+####################################
 
-
+data <- read.csv (file = "kola.csv", header = TRUE, sep = ";", dec = ",")
+str (data)
 
 
