@@ -52,6 +52,7 @@ sum (psti)
 names (psti) <- seq (0, 4, by = 1)
 #bar chart
 barplot (psti, xlab = "head count", ylab = "prob")
+
 #-------------------------------------------------------------------------------
 #-KOSTKY------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -79,6 +80,22 @@ psti
 sum (psti)
 #bar chart
 barplot(psti)
+
+#-------------------------------------------------------------------------------
+#-KOSTKY 2 - PODMINENA ---------------------------------------------------------
+#-------------------------------------------------------------------------------
+#hodime kostkou a priradime pravedepodobnosti
+kostky <- rolldie (2)
+S <- probspace (kostky)
+
+# A = 2 petky
+# B = soucet delitelny peti
+A <- subset (S, X1 == 5 & X2 == 5)
+B <- subset (S, (X1 + X2) %% 5 == 0)
+#prunik obou pravdepodobnosti
+AB <- intersect (A, B)
+#vzpsani pravdepodobnosti na konzolu
+Prob (AB) / Prob (B)
 
 #-------------------------------------------------------------------------------
 #-TRI KOSTKY--------------------------------------------------------------------
@@ -130,26 +147,84 @@ nA <- sum (V$ok)
 fA <- nA / n
 title (main = paste (nA, "/", n, "=", fA))
 
-##########################################################
+#-------------------------------------------------------------------------------
+#-KUNHUTA - PODMINENA PRAVDEPODOBNOST-------------------------------------------
+#-------------------------------------------------------------------------------
+#	Priklad 3
 
-n <- 100
+#	Kunhuta
+# "DK" = divka Kunhuta, "Do" = divka jineho jmena, "H" = hoch
 
-d <- 10
+u <- c ("DK", "Do", "H")
+# Ceska republika: 1 osoba z 3566848 ma jmeno Kunhuta
+p1 <- 1 / 3566848
+p <- c (p1, 0.5 - p1, 0.5)
+S <- iidspace (u, 2, probs = p)
+S
+#	V jedne rodine nemuze mit vice deti stejne jmeno
+S[2,]$probs <- S[2,]$probs + S[1,]$probs / 2
+S[4,]$probs <- S[4,]$probs + S[1,]$probs / 2
+S[1,]$probs <- 0
+S
 
-par (mfrow = c(1,1), mar = c(4,4,4,1))
-plot(c(0,d), c(0,d), type = "n", xlab = "bob x", ylab = "bod y")
+dev.new ()
+barplot (as.matrix (S$probs), col = rainbow (nrow (S)), horiz = TRUE, xlim = c (0, 1.4), main = "Kunhuta") 
+legend ("right", legend = paste (S$X1, S$X2, round (S$probs, 2), sep = " - ") , fill = rainbow (nrow (S)))
 
-x <- runif (n, 0, d)
-y <- runif (n, 0, d)
-
-v <- data.frame (cbind(x,y))
-v$ok <- (( v$X <= v$Y) & (v$Y > d/2) & (v$X <d/2) & (v$Y < v$X + d/2) | (v$X > v$Y)) #doplnit a opravit
-v$color <- ifelse(v$ok, "#00cc00", "#ff0000")
-v$symbol <- ifelse (v$ok, 1,4)
-
-points (v$X, v$Y, col = c$color, pch = v$symbol, lwd = 2)
-nA <- sum (v$ok)
-fA <- nA / n
-title (main = paste(nA, "/", n, "=", fA))
+B <- subset (S, isin (S, "DK"))
+A <- subset (S, ! isin (S, "H"))
+AB <- intersect (A, B)
+Prob (AB) / Prob (B)
 
 
+#-------------------------------------------------------------------------------
+#-MARIE (KUNHUTA) - PODMINENA PRAVDEPODOBNOST-----------------------------------
+#-------------------------------------------------------------------------------
+
+u <- c ("DM", "Do", "H")
+# Ceska republika: 1 osoba z 40 ma jmeno Marie
+p1 <- 1 / 40
+p <- c (p1, 0.5 - p1, 0.5)
+S <- iidspace (u, 2, probs = p)
+S
+#	V jedne rodine nemuze mit vice deti stejne jmeno
+S[2,]$probs <- S[2,]$probs + S[1,]$probs / 2
+S[4,]$probs <- S[4,]$probs + S[1,]$probs / 2
+S[1,]$probs <- 0
+S
+
+dev.new ()
+barplot (as.matrix (S$probs), col = rainbow (nrow (S)), horiz = TRUE, xlim = c (0, 1.4), main = "Marie") 
+legend ("right", legend = paste (S$X1, S$X2, round (S$probs, 2), sep = " - ") , fill = rainbow (nrow (S)))
+
+B <- subset (S, isin (S, "DK"))
+A <- subset (S, ! isin (S, "H"))
+AB <- intersect (A, B)
+Prob (AB) / Prob (B)
+
+#-------------------------------------------------------------------------------
+#-NEHODOVOST - PODMINENA PRAVDEPODOBNOST----------------------------------------
+#-------------------------------------------------------------------------------
+
+# Pravdepodobnostn prostor vytvorime primym zapisem
+kategorie <- rep (c ("A", "B", "C"), each = 2)
+nehoda <- rep (c ("ano", "ne"), 3)
+# Zkombinujeme do datove tabulky
+el.jevy <- data.frame (kategorie, nehoda)
+# Zadame pravdepodobnosti 
+p <- c (0.7 * 0.03, 0.7 * (1-0.03), 0.2 * 0.06, 0.2 * (1-0.06), 0.1 * 0.1, 0.1 * (1-0.1))
+S <- probspace (el.jevy, probs = p)
+
+S
+sum (S$probs)
+
+barplot (as.matrix (S$probs), col = rainbow (nrow (S)), horiz = TRUE, xlim = c (0, 1.4), main = "kategorie - nehoda") 
+legend ("right", legend = paste (S$kategorie, S$nehoda, round (S$probs, 2), sep = " - ") , fill = rainbow (nrow (S)))
+
+N <- subset (S, nehoda == "ano")
+Prob (N)
+
+A <- subset (S, kategorie == "A")
+AN <- intersect (A, N)
+Prob (AN) / Prob (N)
+Prob (AN)
