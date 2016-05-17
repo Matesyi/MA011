@@ -8,7 +8,7 @@ summary (tabulka)
 
 # prokladame primkou (polynom stupne jedna) 
 
-#Fitting Linear Models (formula, data)
+#Fitting Linear Models (formula, data) - novorozenec je zavisly na matce
 model1 <- lm (novorozenec ~ matka, data = tabulka) 
 model1
 #provedeme opet pro celkovy vypis informaci
